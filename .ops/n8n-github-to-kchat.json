@@ -1,0 +1,109 @@
+{
+  "name": "GitHub → kChat #mathr-dev",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "github-mathr",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wh-1",
+      "name": "GitHub Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 320],
+      "webhookId": "github-mathr"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            { "outputKey": "push", "conditions": { "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" }, "conditions": [ { "id": "c1", "leftValue": "={{$json.headers['x-github-event']}}", "rightValue": "push", "operator": { "type": "string", "operation": "equals" } } ], "combinator": "and" } },
+            { "outputKey": "pull_request", "conditions": { "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" }, "conditions": [ { "id": "c2", "leftValue": "={{$json.headers['x-github-event']}}", "rightValue": "pull_request", "operator": { "type": "string", "operation": "equals" } } ], "combinator": "and" } },
+            { "outputKey": "ping", "conditions": { "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" }, "conditions": [ { "id": "c3", "leftValue": "={{$json.headers['x-github-event']}}", "rightValue": "ping", "operator": { "type": "string", "operation": "equals" } } ], "combinator": "and" } }
+          ]
+        },
+        "options": {}
+      },
+      "id": "sw-1",
+      "name": "Route by event",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [480, 320]
+    },
+    {
+      "parameters": {
+        "jsCode": "const b = $json.body;\nconst commits = (b.commits || []).slice(-5);\nconst branch = (b.ref || '').replace('refs/heads/', '');\nconst lines = commits.map(c => `• \\`${c.id.slice(0,7)}\\` ${c.message.split('\\n')[0]} — _${c.author.name}_`).join('\\n');\nconst text = `**[${b.repository.name}]** push to \\`${branch}\\` by **${b.pusher.name}** (${commits.length} commit${commits.length===1?'':'s'})\\n${lines}\\n${b.compare}`;\nreturn [{ json: { text } }];"
+      },
+      "id": "fmt-push",
+      "name": "Format push",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "const b = $json.body;\nconst pr = b.pull_request;\nconst action = b.action;\nconst emoji = action === 'opened' ? '📬' : action === 'closed' ? (pr.merged ? '✅' : '🚫') : action === 'reopened' ? '↻' : '✏️';\nconst text = `${emoji} **[${b.repository.name}]** PR #${pr.number} ${action} by **${b.sender.login}**\\n_${pr.title}_\\n${pr.html_url}`;\nreturn [{ json: { text } }];"
+      },
+      "id": "fmt-pr",
+      "name": "Format PR",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 360]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { text: `🔌 webhook connected: **${$json.body.repository.full_name}**` } }];"
+      },
+      "id": "fmt-ping",
+      "name": "Format ping",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 520]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$env.KCHAT_WEBHOOK_URL}}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ text: $json.text }) }}",
+        "options": {}
+      },
+      "id": "kchat",
+      "name": "Send to kChat",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [980, 360]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "ok"
+      },
+      "id": "resp",
+      "name": "Respond OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1220, 360]
+    }
+  ],
+  "connections": {
+    "GitHub Webhook": { "main": [ [ { "node": "Route by event", "type": "main", "index": 0 } ] ] },
+    "Route by event": {
+      "main": [
+        [ { "node": "Format push", "type": "main", "index": 0 } ],
+        [ { "node": "Format PR", "type": "main", "index": 0 } ],
+        [ { "node": "Format ping", "type": "main", "index": 0 } ]
+      ]
+    },
+    "Format push": { "main": [ [ { "node": "Send to kChat", "type": "main", "index": 0 } ] ] },
+    "Format PR":   { "main": [ [ { "node": "Send to kChat", "type": "main", "index": 0 } ] ] },
+    "Format ping": { "main": [ [ { "node": "Send to kChat", "type": "main", "index": 0 } ] ] },
+    "Send to kChat": { "main": [ [ { "node": "Respond OK", "type": "main", "index": 0 } ] ] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "pinData": {},
+  "meta": { "templateId": "mathr-github-kchat" }
+}
