@@ -6,6 +6,8 @@
     "directory": "./dist",
     "not_found_handling": "404-page"
   },
+  "workers_dev": true,
+  "preview_urls": true,
   "observability": {
     "enabled": true
   }
