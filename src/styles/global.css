@@ -1,0 +1,113 @@
+:root {
+  --anthracite: #171A1C;
+  --warm-paper: #F4F1EA;
+  --deep-water: #2A5F6F;
+  --trace-amber: #C89B5A;
+  --muted-silver: #9CA3A6;
+
+  --measure: 36rem;
+  --rhythm: 1.6;
+
+  --font-serif: "Source Serif 4", "Source Serif Pro", Georgia, "Times New Roman", serif;
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--warm-paper);
+  color: var(--anthracite);
+  font-family: var(--font-serif);
+  font-size: 18px;
+  line-height: var(--rhythm);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-feature-settings: "kern", "liga", "calt";
+}
+
+main {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: clamp(3rem, 8vh, 7rem) clamp(1.5rem, 4vw, 2.5rem);
+}
+
+h1 {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0 0 3rem 0;
+  color: var(--anthracite);
+}
+
+p {
+  margin: 0 0 1.5rem 0;
+}
+
+.lede {
+  font-size: 1.125rem;
+  line-height: 1.55;
+  color: var(--anthracite);
+}
+
+.lede em {
+  font-style: normal;
+  color: var(--deep-water);
+}
+
+.body {
+  color: var(--anthracite);
+  opacity: 0.92;
+}
+
+.cta {
+  margin: 3rem 0 4rem 0;
+  padding: 1.25rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--anthracite) 18%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--anthracite) 18%, transparent);
+}
+
+.cta a {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+  color: var(--deep-water);
+  text-decoration: none;
+  border-bottom: 1px solid var(--trace-amber);
+  padding-bottom: 2px;
+  transition: color 120ms ease;
+}
+
+.cta a:hover {
+  color: var(--anthracite);
+}
+
+.footer {
+  margin-top: 4rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: var(--muted-silver);
+}
+
+.footer p {
+  margin: 0;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--trace-amber) 35%, transparent);
+  color: var(--anthracite);
+}
