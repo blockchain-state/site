@@ -1,0 +1,120 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  lang="ru"
+  current="entry"
+  title="Вход — Math.R / BS Protocol"
+  description="Войди с одной живой задачей. Принеси напряжение, не запрос на работу."
+>
+  <article class="doc">
+    <h1>Вход</h1>
+    <p class="doc-subtitle">Одна живая задача. Принеси напряжение, не запрос на работу.</p>
+
+    <p>
+      Первые циклы прогоняются вручную. Заявка попадает в рабочий канал
+      и человек отвечает в течение нескольких дней. Нет очереди, нет листа ожидания.
+      Если напряжение живое и сформулировано — ответ быстрый.
+    </p>
+
+    <p>
+      Перед заполнением прочти <a href="/ru/foundation">Основание</a>,
+      если ещё не. В частности — различие между Question и task.
+    </p>
+
+    <form
+      class="form"
+      method="POST"
+      action="https://n8n.mathr.ch/webhook/intake"
+      enctype="application/x-www-form-urlencoded"
+      id="intake-form"
+    >
+      <input type="hidden" name="lang" value="ru" />
+      <input type="hidden" name="source" value="mathr.ch/ru/entry" />
+
+      <div class="hp" aria-hidden="true">
+        <label for="website">Website (leave empty)</label>
+        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <div class="field">
+        <label for="tension">Твоя живая задача</label>
+        <span class="hint">
+          Один абзац. Напряжение, которое ты несёшь — не проблема для аутсорса,
+          а напряжение, которое можешь описать точно.
+        </span>
+        <textarea id="tension" name="tension" rows="5" required maxlength="2000"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="context">Контекст</label>
+        <span class="hint">
+          Кто ты, что уже пробовал, что под угрозой. Одного абзаца хватит.
+        </span>
+        <textarea id="context" name="context" rows="4" required maxlength="2000"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="contact">Контакт</label>
+        <span class="hint">
+          Telegram, email или любой канал, где тебя найдёт ответ.
+        </span>
+        <input type="text" id="contact" name="contact" required maxlength="200" />
+      </div>
+
+      <div class="field">
+        <label for="name">Имя <small style="font-weight:400;color:var(--muted-silver)">(не обязательно)</small></label>
+        <input type="text" id="name" name="name" maxlength="200" />
+      </div>
+
+      <div class="submit">
+        <button type="submit" id="submit-btn">Отправить →</button>
+      </div>
+
+      <p class="form-status" id="form-status" aria-live="polite"></p>
+    </form>
+
+    <p class="doc-meta">
+      Заявки идут в рабочий канал. Ответ — по указанному контакту.
+    </p>
+  </article>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    const form = document.getElementById('intake-form');
+    const status = document.getElementById('form-status');
+    const btn = document.getElementById('submit-btn');
+
+    const messages = {
+      sending: 'Отправляется…',
+      ok: 'Принято. Человек ответит по указанному контакту.',
+      err: 'Не получилось отправить. Попробуй ещё раз или напиши через ссылки в /foundation.',
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      btn.disabled = true;
+      status.className = 'form-status';
+      status.textContent = messages.sending;
+
+      const data = new FormData(form);
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new URLSearchParams(data),
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        });
+        if (!res.ok) throw new Error('Bad response');
+        status.className = 'form-status ok';
+        status.textContent = messages.ok;
+        form.reset();
+      } catch (err) {
+        status.className = 'form-status err';
+        status.textContent = messages.err;
+        btn.disabled = false;
+      }
+    });
+  })();
+</script>

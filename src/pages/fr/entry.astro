@@ -1,0 +1,123 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  lang="fr"
+  current="entry"
+  title="Entrée — Math.R / Protocole BS"
+  description="Entrez avec une tâche vivante. Apportez une tension, non une demande de travail."
+>
+  <article class="doc">
+    <h1>Entrée</h1>
+    <p class="doc-subtitle">Une tâche vivante. Apportez une tension, non une demande de travail.</p>
+
+    <p>
+      Les premiers cycles se font à la main. Les soumissions arrivent dans
+      le canal de travail et un humain répond en quelques jours. Pas de file
+      d’attente, pas de liste. Si la tension est vivante et formulée,
+      la réponse est rapide.
+    </p>
+
+    <p>
+      Lisez d’abord le <a href="/fr/foundation">Fondement</a> si ce n’est pas
+      déjà fait. En particulier, la différence entre une Question et une tâche.
+    </p>
+
+    <form
+      class="form"
+      method="POST"
+      action="https://n8n.mathr.ch/webhook/intake"
+      enctype="application/x-www-form-urlencoded"
+      id="intake-form"
+    >
+      <input type="hidden" name="lang" value="fr" />
+      <input type="hidden" name="source" value="mathr.ch/fr/entry" />
+
+      <div class="hp" aria-hidden="true">
+        <label for="website">Website (leave empty)</label>
+        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <div class="field">
+        <label for="tension">Votre tâche vivante</label>
+        <span class="hint">
+          Un paragraphe. La tension que vous portez — non un problème à externaliser,
+          mais une tension que vous pouvez décrire avec précision.
+        </span>
+        <textarea id="tension" name="tension" rows="5" required maxlength="2000"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="context">Contexte</label>
+        <span class="hint">
+          Qui vous êtes, ce que vous avez déjà essayé, ce qui est en jeu.
+          Un paragraphe suffit.
+        </span>
+        <textarea id="context" name="context" rows="4" required maxlength="2000"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="contact">Contact</label>
+        <span class="hint">
+          Telegram, e-mail, ou tout canal où une réponse pourra vous atteindre.
+        </span>
+        <input type="text" id="contact" name="contact" required maxlength="200" />
+      </div>
+
+      <div class="field">
+        <label for="name">Nom <small style="font-weight:400;color:var(--muted-silver)">(facultatif)</small></label>
+        <input type="text" id="name" name="name" maxlength="200" />
+      </div>
+
+      <div class="submit">
+        <button type="submit" id="submit-btn">Envoyer →</button>
+      </div>
+
+      <p class="form-status" id="form-status" aria-live="polite"></p>
+    </form>
+
+    <p class="doc-meta">
+      Les soumissions vont dans le canal de travail. La réponse arrive
+      par le contact que vous indiquez.
+    </p>
+  </article>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    const form = document.getElementById('intake-form');
+    const status = document.getElementById('form-status');
+    const btn = document.getElementById('submit-btn');
+
+    const messages = {
+      sending: 'Envoi en cours…',
+      ok: 'Reçu. Un humain répondra par votre contact.',
+      err: 'L’envoi a échoué. Réessayez ou utilisez les références dans /fondement.',
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      btn.disabled = true;
+      status.className = 'form-status';
+      status.textContent = messages.sending;
+
+      const data = new FormData(form);
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new URLSearchParams(data),
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        });
+        if (!res.ok) throw new Error('Bad response');
+        status.className = 'form-status ok';
+        status.textContent = messages.ok;
+        form.reset();
+      } catch (err) {
+        status.className = 'form-status err';
+        status.textContent = messages.err;
+        btn.disabled = false;
+      }
+    });
+  })();
+</script>

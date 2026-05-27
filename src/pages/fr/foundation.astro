@@ -1,0 +1,146 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  lang="fr"
+  current="foundation"
+  title="Fondement — Math.R / Protocole BS"
+  description="Le fondement opérationnel : trois invariants structurels, itinéraire pratique en huit étapes, principe d’auto-amendement."
+>
+  <article class="doc">
+    <h1>Fondement</h1>
+    <p class="doc-subtitle">Protocole BS — v0.1</p>
+
+    <p>
+      Couche opérationnelle du fondement. Ni ontologie, ni spécification technique.
+      Il s’agit du <strong>contour minimal</strong> que tout premier participant,
+      investisseur ou expert subventionnaire doit comprendre de manière identique.
+    </p>
+
+    <h2>Définition opératoire</h2>
+
+    <p>
+      Le <strong>Protocole BS / ARQ MVP</strong> est un protocole minimal de
+      collaboration dans lequel les participants produisent eux-mêmes les
+      questions, les décisions, les traces et les règles d’interaction, tandis
+      que le système les aide à acheminer le chemin qui mène d’un problème
+      encore flou jusqu’à un résultat consigné.
+    </p>
+
+    <blockquote>
+      <p>
+        Un protocole guidé par intelligence artificielle pour la collaboration
+        adaptative. Il aide de petits groupes à formuler des problèmes,
+        à répartir leur attention, à consigner leurs décisions et à adapter
+        leurs propres règles de travail commun à mesure que la complexité s’accroît.
+      </p>
+    </blockquote>
+
+    <h2>L’itinéraire pratique</h2>
+
+    <p>Un cycle complet de collaboration se déploie en huit moments :</p>
+
+    <pre><code>Problème → Question → Trace → Signal → Coordination → Action → Résultat → Mise à jour</code></pre>
+
+    <table>
+      <thead>
+        <tr><th>Étape</th><th>Ce qui se passe</th><th>Qui fait avancer</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Problème</strong></td><td>Une obscurité intérieure</td><td>Tout humain</td></tr>
+        <tr><td><strong>Question</strong></td><td>L’obscurité devient un Q formulé</td><td>ARQ assiste</td></tr>
+        <tr><td><strong>Trace</strong></td><td>Le Q et ses premiers mouvements consignés</td><td>ARQ et l’auteur</td></tr>
+        <tr><td><strong>Signal</strong></td><td>La Trace devient un signal pour d’autres</td><td>Le système route</td></tr>
+        <tr><td><strong>Coordination</strong></td><td>Plusieurs participants reprennent</td><td>Cellule (3 à 5)</td></tr>
+        <tr><td><strong>Action</strong></td><td>Exécution de ce qui a été décidé</td><td>Cellule</td></tr>
+        <tr><td><strong>Résultat</strong></td><td>Un changement consigné</td><td>Cellule</td></tr>
+        <tr><td><strong>Mise à jour</strong></td><td>Une correction procédurale est introduite</td><td>Cellule via fork BS</td></tr>
+      </tbody>
+    </table>
+
+    <p>Le MVP doit démontrer <strong>au moins un cycle complet</strong> sur un groupe de trois à cinq.</p>
+
+    <h2>Les trois invariants structurels</h2>
+
+    <p>Ces trois règles ne peuvent être forkées. En leur absence, le protocole s’effondre.</p>
+
+    <h3>1. Question ≠ tâche.</h3>
+    <p>
+      Un Q est une <em>tension</em> formulée, non une demande de travail.
+      Sans cela, le Q se dégrade en ticket Jira et le protocole devient
+      un gestionnaire de tâches.
+    </p>
+
+    <h3>2. L’étincelle (Spark) doit porter un coût-d’erreur.</h3>
+    <p>
+      Toute proposition de direction de résolution est tenue d’énoncer
+      explicitement <em>« ce qui deviendra visible si cette hypothèse est fausse »</em>.
+      Sans cela, la Trace accumule des opinions au lieu de mouvements vérifiables.
+    </p>
+
+    <h3>3. L’initiateur n’est pas l’assembleur.</h3>
+    <p>
+      La personne qui a formulé un Q ne peut être celle qui clôt sa Trace.
+      Invariant structurel d’anti-autovalidation. Il empêche le cycle de
+      s’effondrer sur une seule personne, quelle que soit la taille de la cellule.
+    </p>
+
+    <p>
+      Tout le reste — fenêtres temporelles, formats, rôles, échéances,
+      organisation du stockage — est déterminé par la cellule elle-même
+      et évolue par l’étape <strong>Mise à jour de la règle</strong>.
+    </p>
+
+    <h2>Le principe d’auto-amendement</h2>
+
+    <p>
+      Une cellule applique le triptyque Q/S/T à sa propre procédure de
+      collaboration. Lorsqu’une chose se brise ou fonctionne mal, cela devient
+      un Q, traverse le cycle, et la Mise à jour de la règle modifie la
+      procédure pour les cycles suivants.
+    </p>
+
+    <p>
+      <strong>Ce qui évolue :</strong> les fenêtres de collecte, les formats de Trace,
+      la composition des rôles, les méthodes de routage, les critères de clôture.
+    </p>
+
+    <p>
+      <strong>Ce qui n’évolue pas :</strong> les trois invariants ci-dessus. Ils
+      protègent le fait même que l’évolution demeure protocolaire et ne se
+      dissolve pas dans l’arbitraire.
+    </p>
+
+    <h2>Phase 0 — ce qui doit être prouvé</h2>
+
+    <p>Non pas <em>« que le protocole fonctionne à l’échelle »</em>. Seulement trois choses :</p>
+
+    <ol>
+      <li><strong>Itinéraire mono-utilisateur.</strong> Une personne traverse ARQ depuis le flou jusqu’à un Q précis et une Trace close.</li>
+      <li><strong>Flux du petit groupe.</strong> Un groupe de trois à cinq personnes accomplit un cycle complet sur une tâche réelle.</li>
+      <li><strong>Mise à jour de règle observable.</strong> Une cellule détecte une lacune procédurale, applique Q/S/T à la procédure elle-même, met à jour son journal.</li>
+    </ol>
+
+    <p>
+      Lorsque ces trois démonstrations existent, nous pouvons parler avec
+      Innosuisse, les premiers participants et les auditoires sérieux non
+      comme d’une utopie, mais comme d’un mécanisme.
+    </p>
+
+    <hr />
+
+    <p>
+      La version canonique de ce document vit dans le dépôt
+      <a href="https://github.com/blockchain-state/math-r-bs/blob/main/BS_PROTOCOL_FOUNDATION_v0.1.md">math-r-bs</a>
+      (en anglais). Les versions russe et française sont compagnes.
+    </p>
+
+    <p>
+      Prêt à commencer ?
+      <a href="/fr/entry">Entrez avec une tâche vivante →</a>
+    </p>
+
+    <p class="doc-meta">v0.1 — 26 mai 2026 · Ouvert au fork</p>
+  </article>
+</BaseLayout>

@@ -4,16 +4,41 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  lang?: 'en' | 'ru' | 'fr';
+  current?: 'home' | 'foundation' | 'entry';
 }
 
 const {
   title = 'Math.R',
   description = 'A digital environment where contribution leaves a trace, cooperation becomes an operating condition, and the node keeps its history.',
+  lang = 'en',
+  current = 'home',
 } = Astro.props;
+
+const routes: Record<'en' | 'ru' | 'fr', Record<'home' | 'foundation' | 'entry', string>> = {
+  en: { home: '/', foundation: '/foundation', entry: '/entry' },
+  ru: { home: '/ru', foundation: '/ru/foundation', entry: '/ru/entry' },
+  fr: { home: '/fr', foundation: '/fr/foundation', entry: '/fr/entry' },
+};
+
+const labels = {
+  en: { foundation: 'Foundation', entry: 'Entry', home: 'Math.R' },
+  ru: { foundation: 'Основание', entry: 'Вход', home: 'Math.R' },
+  fr: { foundation: 'Fondement', entry: 'Entrée', home: 'Math.R' },
+} as const;
+
+const t = labels[lang];
+const r = routes[lang];
+
+const langTargets = {
+  en: routes.en[current],
+  ru: routes.ru[current],
+  fr: routes.fr[current],
+};
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -25,13 +50,39 @@ const {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content="https://mathr.ch" />
+    <meta property="og:locale" content={lang === 'en' ? 'en_US' : lang === 'ru' ? 'ru_RU' : 'fr_CH'} />
+
+    <link rel="alternate" hreflang="en" href={`https://mathr.ch${routes.en[current]}`} />
+    <link rel="alternate" hreflang="ru" href={`https://mathr.ch${routes.ru[current]}`} />
+    <link rel="alternate" hreflang="fr" href={`https://mathr.ch${routes.fr[current]}`} />
+    <link rel="alternate" hreflang="x-default" href={`https://mathr.ch${routes.en[current]}`} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
   </head>
   <body>
+    <header class="topbar">
+      <nav class="langs" aria-label="Language">
+        <a href={langTargets.en} class={lang === 'en' ? 'active' : ''} hreflang="en">EN</a>
+        <span class="sep">·</span>
+        <a href={langTargets.ru} class={lang === 'ru' ? 'active' : ''} hreflang="ru">RU</a>
+        <span class="sep">·</span>
+        <a href={langTargets.fr} class={lang === 'fr' ? 'active' : ''} hreflang="fr">FR</a>
+      </nav>
+    </header>
+
     <main>
       <slot />
     </main>
+
+    <footer class="sitefoot">
+      <nav class="pages" aria-label="Sections">
+        <a href={r.home} class={current === 'home' ? 'active' : ''}>{t.home}</a>
+        <span class="sep">·</span>
+        <a href={r.foundation} class={current === 'foundation' ? 'active' : ''}>{t.foundation}</a>
+        <span class="sep">·</span>
+        <a href={r.entry} class={current === 'entry' ? 'active' : ''}>{t.entry}</a>
+      </nav>
+    </footer>
   </body>
 </html>

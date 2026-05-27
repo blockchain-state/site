@@ -1,0 +1,148 @@
+{
+  "name": "Intake form → kChat #mathr-dev",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "intake",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": false
+        }
+      },
+      "id": "wh-intake",
+      "name": "Intake Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 320],
+      "webhookId": "intake"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "spam",
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "loose" },
+                "conditions": [
+                  {
+                    "id": "hp",
+                    "leftValue": "={{$json.body.website || ''}}",
+                    "rightValue": "",
+                    "operator": { "type": "string", "operation": "notEquals" }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "outputKey": "valid",
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "loose" },
+                "conditions": [
+                  {
+                    "id": "tension",
+                    "leftValue": "={{$json.body.tension || ''}}",
+                    "rightValue": "",
+                    "operator": { "type": "string", "operation": "notEquals" }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "sw-intake",
+      "name": "Honeypot + validate",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [480, 320]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Spam path — log silently, no kChat\nreturn [{ json: { text: 'spam_dropped', skipKchat: true } }];"
+      },
+      "id": "fmt-spam",
+      "name": "Drop spam",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 180]
+    },
+    {
+      "parameters": {
+        "jsCode": "const b = $json.body;\nconst trim = (s, n = 1800) => {\n  s = (s || '').toString().trim();\n  return s.length > n ? s.slice(0, n) + '…' : s;\n};\nconst lang = (b.lang || '?').toUpperCase();\nconst name = b.name ? `**${b.name}**` : '_(anonymous)_';\nconst contact = b.contact || '(no contact)';\nconst source = b.source || 'mathr.ch';\nconst tension = trim(b.tension);\nconst context = trim(b.context);\nconst text = `📨 **New /entry submission** \\`[${lang}]\\`\\n${name} · ${contact}\\n_via ${source}_\\n\\n**Tension**\\n${tension}\\n\\n**Context**\\n${context}`;\nreturn [{ json: { text, skipKchat: false } }];"
+      },
+      "id": "fmt-intake",
+      "name": "Format intake",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 440]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://frolenko-oleg.kchat.infomaniak.com/hooks/019e5f9b-c0a0-70fb-bfb0-4fb38c4cb26e",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ text: $json.text }) }}",
+        "options": {}
+      },
+      "id": "kchat-send",
+      "name": "Send to kChat #mathr-dev",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [980, 440]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { ok: true } }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              { "name": "Access-Control-Allow-Origin", "value": "https://mathr.ch" },
+              { "name": "Access-Control-Allow-Methods", "value": "POST, OPTIONS" },
+              { "name": "Access-Control-Allow-Headers", "value": "Content-Type" },
+              { "name": "Vary", "value": "Origin" }
+            ]
+          }
+        }
+      },
+      "id": "resp-ok",
+      "name": "Respond OK (CORS)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1220, 360]
+    }
+  ],
+  "connections": {
+    "Intake Webhook": {
+      "main": [[{ "node": "Honeypot + validate", "type": "main", "index": 0 }]]
+    },
+    "Honeypot + validate": {
+      "main": [
+        [{ "node": "Drop spam", "type": "main", "index": 0 }],
+        [{ "node": "Format intake", "type": "main", "index": 0 }]
+      ]
+    },
+    "Drop spam": {
+      "main": [[{ "node": "Respond OK (CORS)", "type": "main", "index": 0 }]]
+    },
+    "Format intake": {
+      "main": [[{ "node": "Send to kChat #mathr-dev", "type": "main", "index": 0 }]]
+    },
+    "Send to kChat #mathr-dev": {
+      "main": [[{ "node": "Respond OK (CORS)", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "pinData": {},
+  "versionId": "intake-v1"
+}

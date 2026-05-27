@@ -1,0 +1,121 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  lang="en"
+  current="entry"
+  title="Entry — Math.R / BS Protocol"
+  description="Enter with one live task. Bring a tension, not a feature request."
+>
+  <article class="doc">
+    <h1>Entry</h1>
+    <p class="doc-subtitle">One live task. Bring a tension, not a feature request.</p>
+
+    <p>
+      First cycles are run by hand. Submissions land in the working channel
+      and a human responds within a few days. No queue, no waiting list.
+      If your tension is alive and shaped, the response is fast.
+    </p>
+
+    <p>
+      Read the <a href="/foundation">Foundation</a> first if you have not.
+      Specifically the difference between a Question and a task.
+    </p>
+
+    <form
+      class="form"
+      method="POST"
+      action="https://n8n.mathr.ch/webhook/intake"
+      enctype="application/x-www-form-urlencoded"
+      id="intake-form"
+    >
+      <input type="hidden" name="lang" value="en" />
+      <input type="hidden" name="source" value="mathr.ch/entry" />
+
+      <div class="hp" aria-hidden="true">
+        <label for="website">Website (leave empty)</label>
+        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <div class="field">
+        <label for="tension">Your live task</label>
+        <span class="hint">
+          One paragraph. The tension you carry — not a problem to be outsourced,
+          a tension you can describe precisely.
+        </span>
+        <textarea id="tension" name="tension" rows="5" required maxlength="2000"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="context">Context</label>
+        <span class="hint">
+          Who you are, what you have already tried, what is at stake.
+          One paragraph is enough.
+        </span>
+        <textarea id="context" name="context" rows="4" required maxlength="2000"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="contact">Contact</label>
+        <span class="hint">
+          Telegram handle, email, or any channel where a reply will reach you.
+        </span>
+        <input type="text" id="contact" name="contact" required maxlength="200" />
+      </div>
+
+      <div class="field">
+        <label for="name">Name <small style="font-weight:400;color:var(--muted-silver)">(optional)</small></label>
+        <input type="text" id="name" name="name" maxlength="200" />
+      </div>
+
+      <div class="submit">
+        <button type="submit" id="submit-btn">Submit →</button>
+      </div>
+
+      <p class="form-status" id="form-status" aria-live="polite"></p>
+    </form>
+
+    <p class="doc-meta">
+      Submissions go to the working channel. We respond by the contact you provide.
+    </p>
+  </article>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    const form = document.getElementById('intake-form');
+    const status = document.getElementById('form-status');
+    const btn = document.getElementById('submit-btn');
+
+    const messages = {
+      sending: 'Sending…',
+      ok: 'Received. A human will respond by your contact.',
+      err: 'Submission failed. Try again, or reach out via /foundation references.',
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      btn.disabled = true;
+      status.className = 'form-status';
+      status.textContent = messages.sending;
+
+      const data = new FormData(form);
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new URLSearchParams(data),
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        });
+        if (!res.ok) throw new Error('Bad response');
+        status.className = 'form-status ok';
+        status.textContent = messages.ok;
+        form.reset();
+      } catch (err) {
+        status.className = 'form-status err';
+        status.textContent = messages.err;
+        btn.disabled = false;
+      }
+    });
+  })();
+</script>

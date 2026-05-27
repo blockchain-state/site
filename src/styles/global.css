@@ -6,6 +6,7 @@
   --muted-silver: #9CA3A6;
 
   --measure: 36rem;
+  --measure-wide: 44rem;
   --rhythm: 1.6;
 
   --font-serif: "Source Serif 4", "Source Serif Pro", Georgia, "Times New Roman", serif;
@@ -34,14 +35,59 @@ body {
   margin: 0;
   min-height: 100vh;
   font-feature-settings: "kern", "liga", "calt";
+  display: flex;
+  flex-direction: column;
 }
 
+/* ─── Top bar (language switcher) ─── */
+.topbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1.25rem clamp(1.5rem, 4vw, 2.5rem) 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+}
+
+.topbar .langs {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.topbar .langs a {
+  color: var(--muted-silver);
+  text-decoration: none;
+  transition: color 120ms ease;
+}
+
+.topbar .langs a:hover {
+  color: var(--anthracite);
+}
+
+.topbar .langs a.active {
+  color: var(--anthracite);
+}
+
+.topbar .langs .sep {
+  color: var(--muted-silver);
+  opacity: 0.5;
+}
+
+/* ─── Main ─── */
 main {
+  flex: 1;
   max-width: var(--measure);
   margin: 0 auto;
-  padding: clamp(3rem, 8vh, 7rem) clamp(1.5rem, 4vw, 2.5rem);
+  padding: clamp(2rem, 6vh, 5rem) clamp(1.5rem, 4vw, 2.5rem);
+  width: 100%;
 }
 
+main.wide {
+  max-width: var(--measure-wide);
+}
+
+/* ─── Typography ─── */
 h1 {
   font-family: var(--font-sans);
   font-weight: 500;
@@ -52,10 +98,52 @@ h1 {
   color: var(--anthracite);
 }
 
+h2 {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 1.375rem;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  margin: 3rem 0 1rem 0;
+  color: var(--anthracite);
+}
+
+h3 {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 1.0625rem;
+  letter-spacing: 0;
+  line-height: 1.3;
+  margin: 2rem 0 0.75rem 0;
+  color: var(--anthracite);
+}
+
 p {
   margin: 0 0 1.5rem 0;
 }
 
+strong {
+  font-weight: 600;
+}
+
+em {
+  font-style: italic;
+}
+
+a {
+  color: var(--deep-water);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--trace-amber) 60%, transparent);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: color 120ms ease;
+}
+
+a:hover {
+  color: var(--anthracite);
+}
+
+/* ─── Hero page (index) ─── */
 .lede {
   font-size: 1.125rem;
   line-height: 1.55;
@@ -93,9 +181,10 @@ p {
 
 .cta a:hover {
   color: var(--anthracite);
+  text-decoration: none;
 }
 
-.footer {
+.tagline {
   margin-top: 4rem;
   font-family: var(--font-mono);
   font-size: 0.8125rem;
@@ -103,8 +192,254 @@ p {
   color: var(--muted-silver);
 }
 
-.footer p {
+.tagline p {
   margin: 0;
+}
+
+/* ─── Long-form content (foundation page) ─── */
+.doc h1 {
+  margin-bottom: 0.5rem;
+}
+
+.doc .doc-subtitle {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 1rem;
+  color: var(--muted-silver);
+  margin: 0 0 3rem 0;
+  letter-spacing: 0;
+}
+
+.doc blockquote {
+  margin: 1.5rem 0;
+  padding: 0.5rem 1.25rem;
+  border-left: 2px solid var(--trace-amber);
+  color: color-mix(in srgb, var(--anthracite) 80%, var(--warm-paper));
+  font-style: italic;
+}
+
+.doc blockquote p {
+  margin: 0;
+}
+
+.doc ul, .doc ol {
+  margin: 0 0 1.5rem 1.25rem;
+  padding: 0;
+}
+
+.doc li {
+  margin-bottom: 0.5rem;
+}
+
+.doc table {
+  width: 100%;
+  margin: 1.5rem 0 2rem 0;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  font-family: var(--font-sans);
+}
+
+.doc table th,
+.doc table td {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--anthracite) 12%, transparent);
+  vertical-align: top;
+  line-height: 1.45;
+}
+
+.doc table th {
+  font-weight: 500;
+  color: var(--anthracite);
+  border-bottom: 1px solid color-mix(in srgb, var(--anthracite) 30%, transparent);
+}
+
+.doc table td {
+  color: color-mix(in srgb, var(--anthracite) 92%, var(--warm-paper));
+}
+
+.doc code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  padding: 0.1em 0.3em;
+  background: color-mix(in srgb, var(--anthracite) 6%, transparent);
+  border-radius: 2px;
+}
+
+.doc pre {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  background: color-mix(in srgb, var(--anthracite) 4%, transparent);
+  border-left: 2px solid color-mix(in srgb, var(--anthracite) 18%, transparent);
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.doc pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.doc hr {
+  border: none;
+  border-top: 1px solid color-mix(in srgb, var(--anthracite) 18%, transparent);
+  margin: 3rem auto;
+  width: 40%;
+}
+
+.doc-meta {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid color-mix(in srgb, var(--anthracite) 12%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted-silver);
+  letter-spacing: 0.05em;
+}
+
+/* ─── Entry form ─── */
+.form {
+  margin: 2rem 0 0;
+}
+
+.form .field {
+  margin-bottom: 2rem;
+}
+
+.form label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--anthracite);
+  margin-bottom: 0.25rem;
+}
+
+.form .hint {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 0.9375rem;
+  font-style: italic;
+  color: color-mix(in srgb, var(--anthracite) 60%, var(--warm-paper));
+  margin-bottom: 0.75rem;
+}
+
+.form input[type="text"],
+.form input[type="email"],
+.form textarea {
+  width: 100%;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--anthracite);
+  background: color-mix(in srgb, var(--warm-paper) 60%, white);
+  border: 1px solid color-mix(in srgb, var(--anthracite) 20%, transparent);
+  border-radius: 2px;
+  padding: 0.6rem 0.75rem;
+  transition: border-color 120ms ease;
+}
+
+.form input:focus,
+.form textarea:focus {
+  outline: none;
+  border-color: var(--deep-water);
+}
+
+.form textarea {
+  min-height: 6rem;
+  resize: vertical;
+  font-family: var(--font-serif);
+}
+
+.form .submit {
+  margin-top: 1rem;
+  padding: 1.25rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--anthracite) 18%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--anthracite) 18%, transparent);
+}
+
+.form button {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+  color: var(--deep-water);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--trace-amber);
+  padding: 0 0 2px 0;
+  cursor: pointer;
+  transition: color 120ms ease;
+}
+
+.form button:hover {
+  color: var(--anthracite);
+}
+
+.form-status {
+  margin-top: 2rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--muted-silver);
+}
+
+/* Honeypot — invisible to humans, present to bots */
+.hp {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  opacity: 0;
+  height: 0;
+  width: 0;
+  pointer-events: none;
+}
+
+.form-status.ok {
+  color: var(--deep-water);
+}
+
+.form-status.err {
+  color: #b85940;
+}
+
+/* ─── Site footer ─── */
+.sitefoot {
+  padding: 2rem clamp(1.5rem, 4vw, 2.5rem) 2.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: var(--muted-silver);
+  display: flex;
+  justify-content: center;
+}
+
+.sitefoot .pages {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.sitefoot .pages a {
+  color: var(--muted-silver);
+  text-decoration: none;
+  transition: color 120ms ease;
+}
+
+.sitefoot .pages a:hover {
+  color: var(--anthracite);
+}
+
+.sitefoot .pages a.active {
+  color: var(--anthracite);
+}
+
+.sitefoot .pages .sep {
+  color: var(--muted-silver);
+  opacity: 0.5;
 }
 
 ::selection {
