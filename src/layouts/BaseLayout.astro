@@ -9,7 +9,7 @@ interface Props {
 }
 
 const {
-  title = 'Math.R',
+  title = 'Math.R — TCP/MR',
   description = 'A digital environment where contribution leaves a trace, cooperation becomes an operating condition, and the node keeps its history.',
   lang = 'en',
   current = 'home',
@@ -45,6 +45,7 @@ const langTargets = {
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#0b0c11" />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
@@ -52,22 +53,23 @@ const langTargets = {
     <meta property="og:url" content="https://mathr.ch" />
     <meta property="og:locale" content={lang === 'en' ? 'en_US' : lang === 'ru' ? 'ru_RU' : 'fr_CH'} />
 
+    <link rel="alternate" hreflang="fr" href={`https://mathr.ch${routes.fr[current]}`} />
     <link rel="alternate" hreflang="en" href={`https://mathr.ch${routes.en[current]}`} />
     <link rel="alternate" hreflang="ru" href={`https://mathr.ch${routes.ru[current]}`} />
-    <link rel="alternate" hreflang="fr" href={`https://mathr.ch${routes.fr[current]}`} />
     <link rel="alternate" hreflang="x-default" href={`https://mathr.ch${routes.en[current]}`} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <title>{title}</title>
   </head>
   <body>
     <header class="topbar">
       <nav class="langs" aria-label="Language">
+        <a href={langTargets.fr} class={lang === 'fr' ? 'active' : ''} hreflang="fr">FR</a>
+        <span class="sep">·</span>
         <a href={langTargets.en} class={lang === 'en' ? 'active' : ''} hreflang="en">EN</a>
         <span class="sep">·</span>
         <a href={langTargets.ru} class={lang === 'ru' ? 'active' : ''} hreflang="ru">RU</a>
-        <span class="sep">·</span>
-        <a href={langTargets.fr} class={lang === 'fr' ? 'active' : ''} hreflang="fr">FR</a>
       </nav>
     </header>
 
